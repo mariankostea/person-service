@@ -1,0 +1,147 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Person API
+  description: API document for Person service
+
+servers:
+  - url: http://localhost:8085/v1
+
+tags:
+- name: Person
+paths:
+  /person:
+    post:
+      tags: 
+      - Person
+      description: Crate a new person
+      operationId: createPerson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              title: Person
+              type: object
+              required:
+                - id 
+                - first_name
+                - last_name
+                - country
+                - age
+              properties:
+                id:
+                  type: string
+                  description: "An unique identifier used to distinguish between different persons"
+                first_name:
+                  type: string
+                  example: John
+                last_name:
+                  type: string
+                  example: Carter
+                country:
+                  type: string
+                  example: MD
+                age:
+                  type: integer
+                  format: int32
+                  minimum: 16
+                email:
+                  type: string
+                  format: email
+      responses:
+        200:
+          description: Person successfully created
+          content:
+            application/json:
+              schema:
+                title: PersonResponse
+                type: object
+                properties:
+                  id:
+                    type: string
+                  status:  
+                    type: string
+                    example: "ADDED"
+        400: 
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+                    
+  /person/{id}/status:
+    put:
+      tags: 
+      - Person
+      description: Update status of a person
+      operationId: updatePersonStatus
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: unique user id to modify the status
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              title: PersonStatus
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - ADDED
+                    - IN-CHECK
+                    - APPROVED
+                    - ACTIVE
+      responses:
+        200:
+          description: Person status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                title: PersonStatusResponse
+                properties:
+                  message:
+                    type: string
+        400: 
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        404: 
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        errorMessage:
+          type: string
+          
