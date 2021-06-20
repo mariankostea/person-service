@@ -8,12 +8,12 @@ servers:
   - url: http://localhost:8085/v1
 
 tags:
-- name: Person
+  - name: Person
 paths:
   /person:
     post:
-      tags: 
-      - Person
+      tags:
+        - Person
       description: Crate a new person
       operationId: createPerson
       requestBody:
@@ -24,7 +24,7 @@ paths:
               title: Person
               type: object
               required:
-                - id 
+                - id
                 - first_name
                 - last_name
                 - country
@@ -32,6 +32,7 @@ paths:
               properties:
                 id:
                   type: string
+                  example: "123456789ABCD"
                   description: "An unique identifier used to distinguish between different persons"
                 first_name:
                   type: string
@@ -46,9 +47,11 @@ paths:
                   type: integer
                   format: int32
                   minimum: 16
+                  example: 16
                 email:
                   type: string
                   format: email
+                  example: email@test.com
       responses:
         200:
           description: Person successfully created
@@ -60,10 +63,10 @@ paths:
                 properties:
                   id:
                     type: string
-                  status:  
+                  status:
                     type: string
                     example: "ADDED"
-        400: 
+        400:
           description: Bad request
           content:
             application/json:
@@ -75,14 +78,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-                    
+
   /person/{id}/status:
     put:
-      tags: 
-      - Person
+      tags:
+        - Person
       description: Update status of a person
       operationId: updatePersonStatus
-      parameters: 
+      parameters:
         - name: id
           in: path
           required: true
@@ -117,13 +120,13 @@ paths:
                 properties:
                   message:
                     type: string
-        400: 
+        400:
           description: Bad request
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        404: 
+        404:
           description: user not found
           content:
             application/json:
